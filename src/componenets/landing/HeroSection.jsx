@@ -1,5 +1,5 @@
 import React from 'react'
-import dashboard_image from '../../assets/dashboard_image.jpg'   
+import dashboard_image from '../../assets/dashboard_image.png'   
 
 const HeroSection = ({openSignIn, openSignUp}) => {
   return (
