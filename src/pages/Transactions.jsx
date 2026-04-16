@@ -5,6 +5,7 @@ import { useUser, useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
 import apiEndpoints from '../util/apiEndpoints';
 import {AlertCircle, Loader2, ReceiptIndianRupee } from 'lucide-react';
+import { getAuthRequestConfig } from '../util/auth';
 
 const Transactions = () => {
 
@@ -18,8 +19,10 @@ const Transactions = () => {
     const fetchTransactions = async () => {
       try{
         setLoading(true);
-        const token = await getToken();
-        const response = await axios.get(apiEndpoints.GET_TRANSACTIONS, {headers: {Authorization: `Bearer ${token}`}});
+        const response = await axios.get(
+          apiEndpoints.GET_TRANSACTIONS,
+          await getAuthRequestConfig(getToken)
+        );
         setTransactions(response.data);
         setError(null);
       }catch(error){
@@ -53,60 +56,60 @@ const Transactions = () => {
     <DashboardLayout activeMenu="Transactions">
         <div className='p-6'>
           <div className='flex items-center gap-2 mb-6'>
-            <ReceiptIndianRupee className='text-blue-600'/>
-            <h1 className='text-2xl font-bold'>Transaction History</h1>
+            <ReceiptIndianRupee className='text-violet-400'/>
+            <h1 className='text-2xl font-bold' style={{color:'var(--text-primary)'}}>Transaction History</h1>
           </div>
           {error && (
-            <div className='mb-6 p-4 bg-red-50 text-red-700 rounded-lg flex items-center'>
+            <div className='mb-6 p-4 dark-alert-error rounded-lg flex items-center gap-2'>
               <AlertCircle size={20} />
               <span>{error}</span>
             </div>
           )}
 
           {loading ? (
-            <div className='flex justify-center items-center h-64'>
-              <Loader2 size={24} className='animate-spin mr-2' />
+            <div className='flex justify-center items-center h-64' style={{color:'var(--text-secondary)'}}>
+              <Loader2 size={24} className='animate-spin mr-2 text-violet-400' />
               <span>Loading transactions...</span>
             </div>
           ) : (
             transactions.length === 0 ? (
-              <div className='bg-gray-50 p-8 rounded-lg text-center'>
-                <ReceiptIndianRupee size={48} className='mx-auto text-gray-400 mb-4' />
-                <h3 className='text-lg font-medium text-gray-700 mb-2'>
+              <div className='dark-empty-state p-8 text-center'>
+                <ReceiptIndianRupee size={48} className='mx-auto mb-4' style={{color:'var(--text-muted)'}} />
+                <h3 className='text-lg font-medium mb-2' style={{color:'var(--text-primary)'}}>
                   No transactions found.
                 </h3>
-                <p className='text-gray-500'>
+                <p style={{color:'var(--text-secondary)'}}>
                   You have not made any transactions yet. Visit the Subscription page to upgrade your plan.
                 </p>
               </div>
             ) : (
-              <div className='overflow-x-auto'>
-                <table className='min-w-full bg-white rounded-lg overflow-hidden shadow'>
-                  <thead className='bg-gray-50'>
+              <div className='overflow-x-auto rounded-xl' style={{background:'var(--bg-surface)', border:'1px solid var(--border-default)'}}>
+                <table className='min-w-full dark-table'>
+                  <thead>
                     <tr>
-                      <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider bg-gray-100 border-b border-gray-200'>Date</th>
-                      <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider bg-gray-100 border-b border-gray-200'>Plan</th>
-                      <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider bg-gray-100 border-b border-gray-200'>Amount</th>
-                      <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider bg-gray-100 border-b border-gray-200'>Credits Added</th>
-                      <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider bg-gray-100 border-b border-gray-200'>Payment Id</th>
+                      <th className='px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider' style={{color:'var(--text-secondary)', background:'var(--bg-elevated)', borderBottom:'1px solid var(--border-default)'}}>Date</th>
+                      <th className='px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider' style={{color:'var(--text-secondary)', background:'var(--bg-elevated)', borderBottom:'1px solid var(--border-default)'}}>Plan</th>
+                      <th className='px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider' style={{color:'var(--text-secondary)', background:'var(--bg-elevated)', borderBottom:'1px solid var(--border-default)'}}>Amount</th>
+                      <th className='px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider' style={{color:'var(--text-secondary)', background:'var(--bg-elevated)', borderBottom:'1px solid var(--border-default)'}}>Credits Added</th>
+                      <th className='px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider' style={{color:'var(--text-secondary)', background:'var(--bg-elevated)', borderBottom:'1px solid var(--border-default)'}}>Payment Id</th>
                     </tr>
                   </thead>
-                  <tbody className='divide-y divide-gray-200'>
+                  <tbody>
                     {transactions.map((transaction) => (
-                      <tr key={transaction.id} className='hover:bg-gray-50'>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                      <tr key={transaction.id}>
+                        <td className='px-6 py-4 whitespace-nowrap text-sm' style={{color:'var(--text-primary)'}}>
                           {formatDate(transaction.transactionDate)}
                         </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                        <td className='px-6 py-4 whitespace-nowrap text-sm' style={{color:'var(--text-primary)'}}>
                           {transaction.planId === "premium" ? "Premium Plan" : transaction.planId === "ultimate" ? "Ultimate Plan" : "Basic Plan"}
                         </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                        <td className='px-6 py-4 whitespace-nowrap text-sm text-green-400'>
                           {formatAmount(transaction.amount)}
                         </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
-                          {transaction.creditsAdded}
+                        <td className='px-6 py-4 whitespace-nowrap text-sm text-violet-400'>
+                          +{transaction.creditsAdded}
                         </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                        <td className='px-6 py-4 whitespace-nowrap text-sm' style={{color:'var(--text-secondary)'}}>
                           {transaction.paymentId ? transaction.paymentId.substring(0, 12) + "..." : "N/A"}
                         </td>
                       </tr>

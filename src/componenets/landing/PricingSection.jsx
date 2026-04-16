@@ -5,48 +5,51 @@ const PricingSection = ({pricingPlans, openSignUp}) => {
 
   
   return (
-    <div className='py-20 bg-gray-50'>
+    <div className='dark-section-base py-20'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='text-center'>
-            <h2 className='text-3xl font-extrabold text-gray-900 sm:text-4xl'>
+            <h2 className='text-3xl font-extrabold sm:text-4xl' style={{color:'var(--text-primary)'}}>
               Simple and Transparent Pricing
             </h2>
-            <p className='mt-4 max-w-2xl mx-auto text-al text-gray-500'>
+            <p className='mt-4 max-w-2xl mx-auto' style={{color:'var(--text-secondary)'}}>
               Choose a plan that fits your needs. No hidden fees, cancel anytime.
             </p>
         </div>
         <div className='mt-16 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-8'>
             {pricingPlans.map((plan,index) => (
-              <div key={index} className={`flex flex-col rounded-lg shadow-lg overflow-hidden ${plan.highlighted ? 'border-2 border-purple-500 transform scale-105' : 'border border-gray-200' }`}>
-                <div className={`px-6 py-8 bg-white ${plan.highlighted ? 'bg-gradient-to-br from-purple-50 to-white' : '' }`}>
+              <div key={index} className={`flex flex-col rounded-xl overflow-hidden transition-all duration-300 ${plan.highlighted ? 'pricing-card-highlight' : 'dark-card'}`}
+                   style={plan.highlighted ? {background:'linear-gradient(135deg, rgba(124,58,237,0.18), rgba(15,23,42,1))'} : {}}>
+                <div className='px-6 py-8'>
                   <div className='flex justify-between items-center'>
-                    <h3 className='text-2xl font-medium text-gray-900'>
+                    <h3 className='text-2xl font-medium' style={{color:'var(--text-primary)'}}>
                       {plan.name}
                     </h3>
                     {plan.highlighted && (
-                      <span className='inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-purple-100 text-purple-800'>
+                      <span className='inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium'
+                            style={{background:'rgba(139,92,246,0.2)', color:'var(--accent-400)', border:'1px solid rgba(139,92,246,0.4)'}}>
                         Popular
                       </span>
                     )}
                   </div>
-                  <p className='mt-4 text-sm text-gray-500'>
+                  <p className='mt-4 text-sm' style={{color:'var(--text-secondary)'}}>
                     {plan.description}
                   </p>
                   <p className='mt-8'>
-                    <span className='text-3xl font-extrabold text-gray-900'>
+                    <span className='text-3xl font-extrabold' style={{color:'var(--text-primary)'}}>
                       ₹{plan.price}
                     </span>
                   </p>
                 </div>
 
-                <div className='flex flex-1 flex-col justify-between px-6 pt-6 pb-8 bg-gray-50 space-y-6'>
-                  <ul className='space-y-4 '>
+                <div className='flex flex-1 flex-col justify-between px-6 pt-6 pb-8 space-y-6'
+                     style={{background:'rgba(15,23,42,0.4)'}}>
+                  <ul className='space-y-4'>
                     {plan.features.map((feature,idx) => (
                       <li key={idx} className='flex items-start'>
                         <div className='flex-shrink-0'>
-                          <Check className='h-5 w-5 text-green-500' aria-hidden="true"/>
+                          <Check className='h-5 w-5 text-green-400' aria-hidden="true"/>
                         </div>
-                        <p className='text-base ml-3 text-gray-700'>{feature}</p>
+                        <p className='text-base ml-3' style={{color:'var(--text-secondary)'}}>{feature}</p>
                       </li>
                     ))}
                   </ul>
@@ -54,7 +57,7 @@ const PricingSection = ({pricingPlans, openSignUp}) => {
                   <div className='rounded-md shadow'>
                     <button
                       onClick={() => openSignUp()} 
-                      className={`w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md ${plan.highlighted ? 'text-white bg-purple-500 hover:bg-purple-600' : 'text-purple-600 bg-white hover:bg-gray-50 border-purple-500'} transition-colors duration-200 shadow-lg `}>
+                      className={`w-full flex items-center justify-center px-6 py-3 text-base font-medium rounded-md transition-colors duration-200 ${plan.highlighted ? 'btn-primary' : 'btn-purple-outline'}`}>
                       {plan.cta}
                     </button>
                   </div>

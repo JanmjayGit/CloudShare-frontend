@@ -28,9 +28,10 @@ const ConfirmationDialog = (
         ConfirmationButtonClass={ConfirmationButtonClass}
         size='sm'
     >
-        <p className='text-gray-600'>{message}</p>
+        <p style={{color:'var(--text-secondary)'}}>{message}</p>
 
-    </Modal>
+
+  </Modal>
 
 
   )

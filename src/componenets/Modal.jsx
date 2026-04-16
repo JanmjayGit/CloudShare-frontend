@@ -57,16 +57,19 @@ const Modal = ({
 
   return (
     <div 
-      className='fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-opacity-30 p-4'
+      className='dark-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4'
       onClick={handleBackdropClick}
     >
-      <div className={`bg-white rounded-lg shadow-xl w-full ${sizeClasses[size]} transform transition-all`}>
+      <div className={`dark-modal-panel w-full ${sizeClasses[size]} transform transition-all animate-fade-up`}>
         {/* Header */}
-        <div className='flex items-center justify-between p-6 border-b border-gray-200'>
-          <h2 className='text-xl font-semibold text-gray-900'>{title}</h2>
+        <div className='flex items-center justify-between p-6' style={{borderBottom:'1px solid var(--border-default)'}}>
+          <h2 className='text-xl font-semibold' style={{color:'var(--text-primary)'}}>{title}</h2>
           <button
             onClick={onClose}
-            className='text-gray-500 hover:text-gray-700 transition-colors'
+            className='transition-colors'
+            style={{color:'var(--text-secondary)'}}
+            onMouseOver={e => e.currentTarget.style.color='var(--text-primary)'}
+            onMouseOut={e => e.currentTarget.style.color='var(--text-secondary)'}
           >
             <X size={30} />
           </button>
@@ -79,11 +82,11 @@ const Modal = ({
 
         {/* Footer with action buttons */}
         {(confirmText || cancelText) && (
-          <div className='flex items-center justify-end gap-3 p-6 border-t border-gray-200'>
+          <div className='flex items-center justify-end gap-3 p-6' style={{borderTop:'1px solid var(--border-default)'}}>
             {cancelText && (
               <button
                 onClick={onClose}
-                className='px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors'
+                className='btn-secondary px-4 py-2'
               >
                 {cancelText}
               </button>
@@ -94,7 +97,10 @@ const Modal = ({
                   onDelete();
                   onClose();
                 }}
-                className='px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors'
+                className='px-4 py-2 rounded-md transition-colors font-medium text-white'
+                style={{background:'rgba(239,68,68,0.85)'}}
+                onMouseOver={e => e.currentTarget.style.background='rgba(239,68,68,1)'}
+                onMouseOut={e => e.currentTarget.style.background='rgba(239,68,68,0.85)'}
               >
                 {deleteText}
               </button>

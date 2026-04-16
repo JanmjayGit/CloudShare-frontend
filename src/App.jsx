@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Landing from "./pages/Landing"
 import Dashboard from "./pages/Dashboard"
-import Upload from "./pages/Upload"
 import MyFiles from "./pages/MyFiles"
 import Subscription from "./pages/Subscription"
 import Transactions from "./pages/Transactions"
@@ -9,17 +8,18 @@ import { RedirectToSignIn, SignedOut, SignedIn } from "@clerk/clerk-react"
 import { Toaster } from "react-hot-toast"
 import { UserCreditsProvider } from "./context/UserCreditsContext"
 import PublicFileView from "./pages/PublicFileView"
+import UploadPage from "./pages/UploadPage"
 
 
 function App() {
-  
+
 
   return (
     <UserCreditsProvider>
       <BrowserRouter>
         <Toaster />
         <Routes>
-          <Route path="/" element={<Landing/>} />
+          <Route path="/" element={<Landing />} />
           <Route path="/dashboard" element={
             <>
               <SignedIn> <Dashboard /> </SignedIn>
@@ -28,7 +28,7 @@ function App() {
           } />
           <Route path="/upload" element={
             <>
-              <SignedIn> <Upload /> </SignedIn>
+              <SignedIn> <UploadPage /> </SignedIn>
               <SignedOut><RedirectToSignIn /></SignedOut>
             </>
           } />
@@ -57,7 +57,7 @@ function App() {
           } />
           <Route path="/*" element={<RedirectToSignIn />} />
         </Routes>
-      
+
       </BrowserRouter>
     </UserCreditsProvider>
   )

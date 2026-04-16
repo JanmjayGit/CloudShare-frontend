@@ -8,21 +8,21 @@ const RecentFiles = ({ files }) => {
     const extension = fileName.split('.').pop().toLowerCase();
     
     if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(extension)) {
-      return <Image size={20} className="text-purple-500" />;
+      return <Image size={20} className="text-purple-400" />;
     }
     if (['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'].includes(extension)) {
-      return <Video size={20} className="text-blue-500" />;
+      return <Video size={20} className="text-blue-400" />;
     }
     if (['mp3', 'wav', 'aac', 'flac', 'm4a', 'ogg'].includes(extension)) {
-      return <Music size={20} className="text-pink-500" />;
+      return <Music size={20} className="text-pink-400" />;
     }
     if (['pdf', 'doc', 'docx', 'txt', 'rtf'].includes(extension)) {
-      return <FileText size={20} className="text-amber-500" />;
+      return <FileText size={20} className="text-amber-400" />;
     }
     if (['xls', 'xlsx', 'csv'].includes(extension)) {
-      return <FileSpreadsheet size={20} className="text-green-700" />;
+      return <FileSpreadsheet size={20} className="text-green-400" />;
     }
-    return <File size={20} className="text-gray-500" />;
+    return <File size={20} style={{color:'var(--text-muted)'}} />;
   };
 
   const formatFileSize = (bytes) => {
@@ -52,16 +52,17 @@ const RecentFiles = ({ files }) => {
   };
 
   return (
-    <div className='bg-white rounded-lg shadow-lg p-6'>
+    <div className='dark-card p-6'>
       {/* Header */}
       <div className='flex items-center justify-between mb-4'>
         <div>
-          <h2 className='text-xl font-bold text-gray-900'>Recent Files</h2>
-          <p className='text-sm text-gray-600'>Your latest uploads</p>
+          <h2 className='text-xl font-bold' style={{color:'var(--text-primary)'}}>Recent Files</h2>
+          <p className='text-sm mt-0.5' style={{color:'var(--text-secondary)'}}>Your latest uploads</p>
         </div>
         <Link 
           to="/my-files" 
-          className='text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1'
+          className='text-sm font-medium flex items-center gap-1 transition-colors'
+          style={{color:'var(--accent-400)'}}
         >
           View All
           <ExternalLink size={14} />
@@ -71,16 +72,16 @@ const RecentFiles = ({ files }) => {
       {/* Files List */}
       {files.length === 0 ? (
         <div className='text-center py-12'>
-          <File size={48} className='mx-auto text-gray-300 mb-3' />
-          <p className='text-gray-500 text-sm'>No files uploaded yet</p>
-          <p className='text-gray-400 text-xs mt-1'>Upload your first file to get started</p>
+          <File size={48} className='mx-auto mb-3' style={{color:'var(--text-muted)'}} />
+          <p className='text-sm' style={{color:'var(--text-secondary)'}}>No files uploaded yet</p>
+          <p className='text-xs mt-1' style={{color:'var(--text-muted)'}}>Upload your first file to get started</p>
         </div>
       ) : (
         <div className='space-y-2'>
           {files.map((file, index) => (
             <div
               key={file.id || index}
-              className='flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors group'
+              className='dark-file-row flex items-center justify-between p-3'
             >
               {/* File Info */}
               <div className='flex items-center gap-3 flex-1 min-w-0'>
@@ -89,15 +90,15 @@ const RecentFiles = ({ files }) => {
                 </div>
                 
                 <div className='flex-1 min-w-0'>
-                  <p className='text-sm font-medium text-gray-900 truncate' title={file.name}>
+                  <p className='text-sm font-medium truncate' title={file.name} style={{color:'var(--text-primary)'}}>
                     {file.name}
                   </p>
                   <div className='flex items-center gap-2 mt-0.5'>
-                    <span className='text-xs text-gray-500'>
+                    <span className='text-xs' style={{color:'var(--text-secondary)'}}>
                       {formatFileSize(file.size)}
                     </span>
-                    <span className='text-xs text-gray-400'>•</span>
-                    <span className='text-xs text-gray-500'>
+                    <span className='text-xs' style={{color:'var(--text-muted)'}}>•</span>
+                    <span className='text-xs' style={{color:'var(--text-secondary)'}}>
                       {formatDate(file.uploadedAt)}
                     </span>
                   </div>
@@ -107,10 +108,8 @@ const RecentFiles = ({ files }) => {
               {/* Status Badge */}
               <div className='flex items-center gap-2 ml-2'>
                 <div 
-                  className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                    file.isPublic 
-                      ? 'bg-green-100 text-green-700' 
-                      : 'bg-gray-100 text-gray-700'
+                  className={`flex items-center gap-1 px-2 py-1 text-xs font-semibold ${
+                    file.isPublic ? 'badge-public' : 'badge-private'
                   }`}
                   title={file.isPublic ? 'Public' : 'Private'}
                 >
@@ -134,10 +133,10 @@ const RecentFiles = ({ files }) => {
 
       {/* Footer */}
       {files.length > 0 && (
-        <div className='mt-4 pt-4 border-t border-gray-200'>
+        <div className='mt-4 pt-4' style={{borderTop:'1px solid var(--border-default)'}}>
           <Link
             to="/my-files"
-            className='w-full block text-center px-4 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors font-medium text-sm'
+            className='dark-view-all-btn w-full block text-center px-4 py-2 font-medium text-sm transition-colors'
           >
             View All Files
           </Link>

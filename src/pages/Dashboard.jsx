@@ -7,6 +7,7 @@ import apiEndpoints from '../util/apiEndpoints';
 import Dashboardupload from '../componenets/Dashboardupload';
 import RecentFiles from '../componenets/RecentFiles';
 import { Loader2 } from 'lucide-react';
+import { getAuthRequestConfig } from '../util/auth';
 
 const Dashboard = () => {
 
@@ -17,19 +18,31 @@ const Dashboard = () => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [remainingUploads, setRemainingUploads] = useState(5);
-  const {getToken} = useAuth();
+  const {getToken, isLoaded, isSignedIn} = useAuth();
   const {fetchUserCredits, updateCredits} = useContext(UserCreditsContext);
   const MAX_FILES = 5;
+
+  const getErrorMessage = (error, fallbackMessage) => {
+    if (error?.code === 'ECONNABORTED') {
+      return 'The server is taking too long to respond. It may be waking up, so please try again in a moment.';
+    }
+
+    return error?.response?.data?.message || fallbackMessage;
+  };
 
   // fetch revent 5 files files 
   useEffect(() => {
     const fetchRecentFiles = async() => {
+      if (!isLoaded || !isSignedIn) {
+        return;
+      }
+
       setLoading(true);
       try{
-        const token = await getToken();
-        const response = await axios.get(apiEndpoints.FETCH_FILES, {headers: {
-          Authorization: `Bearer ${token}`
-        }});
+        const response = await axios.get(
+          apiEndpoints.FETCH_FILES,
+          await getAuthRequestConfig(getToken)
+        );
 
         // sort by uploaded At nd take only five most recent files
         const sortedFiles= response.data.sort((a, b) => 
@@ -37,12 +50,14 @@ const Dashboard = () => {
         setFiles(sortedFiles);
       }catch(error){
         console.log("Error fetching recent files:", error);
+        setMessage(getErrorMessage(error, "Error loading recent files. Please try again."));
+        setMessageType("error");
       }finally{
         setLoading(false);
       }
     }
     fetchRecentFiles();
-  },[getToken]);
+  },[getToken, isLoaded, isSignedIn]);
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -90,13 +105,11 @@ const Dashboard = () => {
     uploadFiles.forEach((file) => formData.append("files", file));
 
     try{
-      const token = await getToken();
-      const response = await axios.post(apiEndpoints.UPLOAD_FILE, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", 
-          Authorization: `Bearer ${token}` // Fixed: added space after Bearer
-        }
-      });
+      const response = await axios.post(
+        apiEndpoints.UPLOAD_FILE,
+        formData,
+        await getAuthRequestConfig(getToken)
+      );
 
       if(response.data && response.data.remainingCredits !== undefined){
         updateCredits(response.data.remainingCredits);
@@ -106,8 +119,9 @@ const Dashboard = () => {
       setUploadFiles([]);
 
       // refresh the recent files list
-      const res = await axios.get(apiEndpoints.FETCH_FILES, 
-        {headers: {'Authorization': `Bearer ${token}`}}
+      const res = await axios.get(
+        apiEndpoints.FETCH_FILES,
+        await getAuthRequestConfig(getToken)
       );
 
       const sortedFiles= res.data.sort((a, b) => 
@@ -118,7 +132,7 @@ const Dashboard = () => {
 
     }catch(error){
       console.error("Error uploading files", error);
-      setMessage(error.response?.data?.message || "Error uploading files. Please try again."); // Fixed typo: respnse -> response
+      setMessage(getErrorMessage(error, "Error uploading files. Please try again."));
       setMessageType("error");
     }finally{
       setUploading(false);
@@ -129,11 +143,11 @@ const Dashboard = () => {
   return (
     <DashboardLayout activeMenu="Dashboard">
        <div className='p-6'>
-          <h1 className='text-2xl font-bold mb-6'>My Drive</h1>
-          <p className='text-gray-600 mb-6'>Upload, manage and share your files securely</p>
+          <h1 className='text-2xl font-bold mb-2' style={{color:'var(--text-primary)'}}>My Drive</h1>
+          <p className='mb-6' style={{color:'var(--text-secondary)'}}>Upload, manage and share your files securely</p>
           {message && (
             <div className={`mb-6 p-4 rounded-lg flex items-center gap-3 ${
-              messageType === 'error' ? 'bg-red-50 text-red-700' : messageType === 'success' ? 'bg-green-50 text-green-700': 'bg-purple-50 text-purple-700'
+              messageType === 'error' ? 'dark-alert-error' : messageType === 'success' ? 'dark-alert-success' : 'dark-alert-info'
             }`}>
               {message}
             </div>
@@ -151,12 +165,12 @@ const Dashboard = () => {
                 remainingUploads={remainingUploads}
               />
             </div>
-            {/* rught column */}
+            {/* right column */}
             <div className='w-full md:w-[60%]'>
               {loading ? (
-                <div className='bg-white rounded-lg shadow p-8 flex flex-col'>
-                  <Loader2 size={40} className='text-purple-500 animate-spin' />
-                  <p className='text-gray-500'>Loading your files...</p>
+                <div className='dark-card p-8 flex flex-col items-center gap-3'>
+                  <Loader2 size={40} className='text-violet-400 animate-spin' />
+                  <p style={{color:'var(--text-secondary)'}}>Loading your files...</p>
                 </div>
               ) : (
                 <RecentFiles files={files}/>

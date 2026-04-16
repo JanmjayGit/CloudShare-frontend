@@ -40,11 +40,11 @@ const Dashboardupload = ({
   };
 
   return (
-    <div className='bg-white rounded-lg shadow-lg p-6'>
+    <div className='dark-card p-6'>
       {/* Header */}
       <div className='mb-4'>
-        <h2 className='text-xl font-bold text-gray-900 mb-1'>Quick Upload</h2>
-        <p className='text-sm text-gray-600'>
+        <h2 className='text-xl font-bold mb-1' style={{color:'var(--text-primary)'}}>Quick Upload</h2>
+        <p className='text-sm' style={{color:'var(--text-secondary)'}}>
           {remainingUploads} slot{remainingUploads !== 1 ? 's' : ''} remaining
         </p>
       </div>
@@ -54,14 +54,9 @@ const Dashboardupload = ({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onClick={() => !uploading && fileInputRef.current?.click()}
-        className={`
-          border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
-          transition-all duration-200
-          ${uploading 
-            ? 'border-gray-300 bg-gray-50 cursor-not-allowed' 
-            : 'border-purple-300 bg-purple-50 hover:border-purple-400 hover:bg-purple-100'
-          }
-        `}
+        className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
+          uploading ? 'dark-drop-zone-disabled cursor-not-allowed' : 'dark-drop-zone cursor-pointer'
+        }`}
       >
         <input
           ref={fileInputRef}
@@ -74,14 +69,15 @@ const Dashboardupload = ({
         
         <CloudUpload 
           size={40} 
-          className={`mx-auto mb-3 ${uploading ? 'text-gray-400' : 'text-purple-500'}`}
+          className={`mx-auto mb-3 ${uploading ? '' : 'text-violet-400'}`}
+          style={uploading ? {color:'var(--text-muted)'} : {}}
         />
         
-        <h3 className='text-base font-semibold text-gray-900 mb-1'>
+        <h3 className='text-base font-semibold mb-1' style={{color:'var(--text-primary)'}}>
           {uploading ? 'Uploading...' : 'Drop files here'}
         </h3>
         
-        <p className='text-xs text-gray-500'>
+        <p className='text-xs' style={{color:'var(--text-muted)'}}>
           or click to browse
         </p>
       </div>
@@ -89,7 +85,7 @@ const Dashboardupload = ({
       {/* Selected Files List */}
       {files.length > 0 && (
         <div className='mt-4'>
-          <h3 className='text-sm font-semibold text-gray-900 mb-2'>
+          <h3 className='text-sm font-semibold mb-2' style={{color:'var(--text-primary)'}}>
             Selected ({files.length})
           </h3>
           
@@ -97,15 +93,15 @@ const Dashboardupload = ({
             {files.map((file, index) => (
               <div
                 key={index}
-                className='flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-200'
+                className='dark-file-row flex items-center justify-between p-2'
               >
                 <div className='flex items-center gap-2 flex-1 min-w-0'>
-                  <File size={16} className='text-purple-500 flex-shrink-0' />
+                  <File size={16} className='text-violet-400 flex-shrink-0' />
                   <div className='flex-1 min-w-0'>
-                    <p className='text-xs font-medium text-gray-900 truncate'>
+                    <p className='text-xs font-medium truncate' style={{color:'var(--text-primary)'}}>
                       {file.name}
                     </p>
-                    <p className='text-xs text-gray-500'>
+                    <p className='text-xs' style={{color:'var(--text-muted)'}}>
                       {formatFileSize(file.size)}
                     </p>
                   </div>
@@ -117,7 +113,8 @@ const Dashboardupload = ({
                       e.stopPropagation();
                       onRemoveFile(index);
                     }}
-                    className='ml-2 p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors'
+                    className='ml-2 p-1 rounded transition-colors'
+                    style={{color:'var(--red-text)'}}
                     title='Remove file'
                   >
                     <X size={14} />
@@ -133,14 +130,7 @@ const Dashboardupload = ({
       <button
         onClick={onUpload}
         disabled={files.length === 0 || uploading}
-        className={`
-          w-full mt-4 px-4 py-3 rounded-lg font-semibold flex items-center justify-center gap-2
-          transition-all duration-200
-          ${files.length === 0 || uploading
-            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'bg-purple-600 text-white hover:bg-purple-700 hover:shadow-lg'
-          }
-        `}
+        className='btn-primary w-full mt-4 px-4 py-3 flex items-center justify-center gap-2'
       >
         {uploading ? (
           <>

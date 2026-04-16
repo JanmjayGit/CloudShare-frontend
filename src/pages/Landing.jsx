@@ -22,7 +22,7 @@ const Landing = () => {
   },[isSignedIn, navigate]);
 
   return (
-    <div className='landing-page bg-gradient-to-b from-gray-50 to-gray-100'>
+    <div className='landing-page' style={{background:'var(--bg-base)'}}>
 
       {/* Hero Section */}
         <HeroSection openSignIn={openSignIn} openSignUp={openSignUp} />

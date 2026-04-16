@@ -19,12 +19,12 @@ const Navbar = ({activeMenu}) => {
     },[fetchUserCredits]);
 
   return (
-    <div className='flex items-center justify-between gap-5 bg-white border-b border-gray-200/50 backdrop-blur-[2px] py-4 px-4 sm:px-7 sticky top-0 z-30'>
+    <div className='dark-navbar flex items-center justify-between gap-5 py-4 px-4 sm:px-7 sticky top-0 z-30'>
         {/* left side with menu button with title */}
         <div className='flex items-center gap-5'>
             <button
                 onClick={() => setOpenSidemenu(!openSidemenu)} 
-                className='block lg:hidden text-black hover:bg-gray-100 p-1 rounded transition-colors'>
+                className='dark-menu-btn block lg:hidden p-1'>
                 {openSidemenu ?(
                     <X className="text-2xl" />
                 ) : (
@@ -32,8 +32,8 @@ const Navbar = ({activeMenu}) => {
                 )}
             </button>
             <div className='flex items-center gap-2'>
-                <Share2 className='text-2xl text-blue-600'/>
-                <span className='font-medium text-lg text-black truncate'>CloudShare</span>
+                <Share2 className='text-2xl text-violet-400'/>
+                <span className='font-bold text-lg truncate' style={{color:'var(--text-primary)'}}>CloudShare</span>
             </div>
         </div>
         {/* right side with user button and credits */}
@@ -50,7 +50,7 @@ const Navbar = ({activeMenu}) => {
         {/* mobile sidemenu */}
 
         {openSidemenu && (
-            <div className='fixed top-[73px] left-0 right-0 bg-white border-b border-gray-200 lg:hidden z-20'>
+            <div className='dark-mobile-sidebar fixed top-[73px] left-0 right-0 lg:hidden z-20'>
                <SideMenu activeMenu={activeMenu}/>
             </div>
         )}
